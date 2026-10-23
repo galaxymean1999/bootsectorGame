@@ -30,18 +30,41 @@ start:
 
     mov ax, 10
     mov bx, 2
+	call calculate_offset
     mov cx, 200
     mov dl, 0x24
     call horizontal_line
 
+	mov ax, 10
+	mov bx, 10
+	call calculate_offset
+	mov cx, 100
+	mov bx, 50
+	mov dl, 77
+	call fill_rect
+
     jmp $
 
-; ax - x cordinate
-; bx - y coordinate
+; ax - memory offset where to start
+; cx - width
+; bx - height
+; dl - colour
+fill_rect:
+.loop:
+	push ax
+	push cx
+	call horizontal_line
+	pop cx
+	pop ax
+	add ax, 320
+	dec bx
+	jnz .loop
+	ret
+
+; ax - memory offset
 ; cx - length
 ; dl - colour
 horizontal_line:
-    call calculate_offset
 .loop:
     mov di, ax
     mov [es:di], dl
